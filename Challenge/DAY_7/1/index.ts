@@ -4,6 +4,41 @@ type THandsType = {
     type:"Five_Kind" | "Four_Kind" | "Full_House" | "Three_Kind" | "Two_Pair" | "One_Pair" | "High_Card";
 }
 
+type TCards = "A" | "K" | "Q" | "J" | "T" | "9" | "8" | "7" | "6" | "5" | "4" | "3" | "2";
+
+const handsTypesArray:THandsType["type"][] = [
+    "Five_Kind", "Four_Kind","Full_House","Three_Kind","Two_Pair","One_Pair","High_Card"
+]
+
+const typePrecedence:Record<THandsType["type"],number> = {
+    "Five_Kind": 1,
+    "Four_Kind": 2,
+    "Full_House": 3,
+    "Three_Kind": 4,
+    "Two_Pair": 5,
+    "One_Pair": 6,
+    "High_Card": 7
+}
+
+const cardPrecedence:Record<string,number> = {
+    "A" : 1,
+    "K" : 2,
+    "Q" : 3,
+    "J" : 4,
+    "T" : 5,
+    "9" : 6,
+    "8" : 7,
+    "7" : 8,
+    "6" : 9,
+    "5" : 10,
+    "4" : 11,
+    "3" : 12,
+    "2" : 13
+
+}
+
+
+
 const input = fs.readFileSync('sample.txt', "utf-8").trim().split("\n").map(value => value.trim().split(" "));
 
 function sortHands(values:string[][]){
@@ -34,8 +69,6 @@ function sortHands(values:string[][]){
             }
         }
 
-
-        console.log(charMap.entries());
         if(pairs.length == 5){
             const areElementsSame = pairs.every((value) => value === pairs[0]);
             if(areElementsSame){
@@ -57,7 +90,7 @@ function sortHands(values:string[][]){
                     pairsCountMap.set(char, (pairsCountMap.get(char)! + 1))
                 }else {
                     pairsCountMap.set(char,1);
-                }
+                }             
             }
 
             for(const count of pairsCountMap.values()){
@@ -93,6 +126,29 @@ function sortHands(values:string[][]){
                 })
             }
         }
+    }
+
+    handsTypes.sort((a,b) => typePrecedence[a.type] - typePrecedence[b.type]);
+
+    const groupedTypesArray = handsTypesArray.map(type => {
+        return handsTypes.filter(hand => hand.type == type)
+    })
+    for(const group of groupedTypesArray){
+        group.sort((a,b) => {
+            const hand1 = a.values[0];
+            const hand2 = b.values[0];
+            let counter = 0;
+
+            while (counter <= 5){
+                const isEqual = cardPrecedence[hand1[counter]] - cardPrecedence[hand2[counter]];
+                if(isEqual == 0){
+                    counter++;
+
+                }else {
+                    return isEqual
+                }
+            }
+        })
     }
 
     return handsTypes;

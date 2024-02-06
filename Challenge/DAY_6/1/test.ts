@@ -14,7 +14,7 @@ for(let t = 0; t < time.length; t++){
         let distanceCovered = timer * s;
 
         if(distanceCovered > recordedDistance){
-            ways++
+            ways++;
         }
     }
 

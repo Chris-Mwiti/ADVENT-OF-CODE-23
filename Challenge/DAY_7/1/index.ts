@@ -35,7 +35,7 @@ function sortHands(values:string[][]){
         }
 
 
-        console.log(pairs);
+        console.log(charMap.entries());
         if(pairs.length == 5){
             const areElementsSame = pairs.every((value) => value === pairs[0]);
             if(areElementsSame){
@@ -50,34 +50,32 @@ function sortHands(values:string[][]){
                 })
             }
         }else if(pairs.length == 4){
-            const charCountMap:Map<string,number> = new Map();
 
-            for(const char in pairs){
-                if(charCountMap.has(char)){
-                    charCountMap.set(char, charCountMap.get(char)! + 1);
+            const pairsCountMap:Map<string,number> = new Map();
+            for(const char of pairs){
+                if(pairsCountMap.has(char)){
+                    pairsCountMap.set(char, (pairsCountMap.get(char)! + 1))
                 }else {
-                    charCountMap.set(char,1);
+                    pairsCountMap.set(char,1);
                 }
             }
 
-            let pairsCount = 0;
-            for(const count of charCountMap.values()){
-                console.log(count);
-                pairsCount += count / 2;
+            for(const count of pairsCountMap.values()){
+                if(count == 4){
+                    handsTypes.push({
+                        values:values[i],
+                        type: "Four_Kind"
+                    })
+                }else{
+                    handsTypes.push({
+                        values:values[i],
+                        type: "Two_Pair"
+                    })
+                    break;
+                }
             }
 
-            if(pairsCount == 2){
-                handsTypes.push({
-                    values: values[i],
-                    type: "Two_Pair"
-                })
-            }else {
-                handsTypes.push({
-                    values: values[i],
-                    type:"Four_Kind"
-                })
-            }
-        } else {
+        }else {
             if(unPaired.length == 2){
                 handsTypes.push({
                     values: values[i],

@@ -1,3 +1,9 @@
+import fs from 'fs';
+const data = fs.readFileSync(
+    './data.txt',
+    'utf-8'
+).split(':')
+
 function calculateCardPoints(acquiredValues:string[], winningValues:string[]){
     let cardPoints = 0;
     acquiredValues.forEach(value => {
@@ -43,6 +49,6 @@ const cards = [
     "31 18 13 56 72 | 74 77 10 23 35 67 36 11"
 ];
 
-const totalCardPoints = evaluateTotalCardPoints(cards);
+const totalCardPoints = evaluateTotalCardPoints(data);
 
 console.log(totalCardPoints);

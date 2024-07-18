@@ -1,6 +1,23 @@
+import fs from 'fs'
+import { isNumberObject } from 'util/types';
+
+const data = fs.readFileSync('./data.txt', 'utf-8').split("\n");
+console.log(data);
+
+function isNum(num:string){
+    const numArr = [0,1,2,3,4,5,6,7,8,9]
+    if(numArr.includes(parseInt(num))) return true;
+    return false;
+}
+
+function isSymbol(elem:string){
+    if(isNum(elem) || elem == '.') return false;
+    return true;
+}
+
 function isDigitOrDot(engine:string[],row:number,col:number){
     return (
-        (engine[row][col] >= '0' && engine[row][col] <= '9') ||
+        (isNum(engine[row][col])) ||
         engine[row][col] == '.'
     )
 }
@@ -11,9 +28,9 @@ function isAdjacentSymbol(engine:string[], row:number, col:number){
         return (
             !isDigitOrDot(engine,row,col + 1) || 
             !isDigitOrDot(engine,row,col - 1)||
-            engine[row + 1][col] != '.'||
-            engine[row + 1][col + 1] != '.' ||
-            engine[row + 1][col - 1] != '.'
+            isSymbol(engine[row + 1][col]) ||
+            isSymbol(engine[row + 1][col + 1]) ||
+            isSymbol(engine[row + 1][col - 1])
         )
     }
 
@@ -21,20 +38,20 @@ function isAdjacentSymbol(engine:string[], row:number, col:number){
         return (
             !isDigitOrDot(engine,row,col + 1) || 
             !isDigitOrDot(engine,row,col - 1) ||
-            engine[row - 1][col + 1] != '.' ||
-            engine[row - 1][col - 1] != '.' ||
-            engine[row - 1][col] != '.' 
+            isSymbol(engine[row - 1][col + 1]) ||
+            isSymbol(engine[row - 1][col - 1]) ||
+            isSymbol(engine[row - 1][col])
         )
     }
     return(
         !isDigitOrDot(engine,row,col + 1) || 
         !isDigitOrDot(engine,row,col - 1)||
-        engine[row + 1][col] != '.' ||
-        engine[row - 1][col] != '.' ||
-        engine[row + 1][col + 1] != '.' ||
-        engine[row + 1][col - 1] != '.' ||
-        engine[row - 1][col + 1] != '.' ||
-        engine[row - 1][col - 1] != '.'
+        isSymbol(engine[row + 1][col]) || 
+        isSymbol(engine[row - 1][col]) ||
+        isSymbol(engine[row + 1][col + 1]) ||
+        isSymbol(engine[row + 1][col - 1]) ||
+        isSymbol(engine[row - 1][col + 1]) ||
+        isSymbol(engine[row - 1][col - 1])
     )
 }
 
@@ -84,6 +101,6 @@ const engineSchematic = [
 ];
 
 
-const sumOfAdjacentNums = sumPartNumbers(engineSchematic);
+const sumOfAdjacentNums = sumPartNumbers(data);
 
 console.log(sumOfAdjacentNums);
